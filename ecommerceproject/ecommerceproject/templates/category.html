@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block metadescription %}
+  {% if category %}
+    {{category.description|truncatewords:155}}
+ {% else %}
+     Welcome to ABC Store where you can buys different items......
+  {% endif %}
+{% endblock %}
+{% block title %}
+       {% if category %}
+         {{category.name}} -ABC Store
+       {% else %}
+          See our New collections-ABC Store
+       {% endif %}
+{% endblock %}
+{% block content %}
+    {% if category %}
+<div>
+    <div class="row my_row_class">
+      <div class="mx_auto">
+        <p><a href="{% url 'ecommerceapp:allProdCat' %}">Our Product collections</a></p>
+    </div>
+      </div>
+</div>
+ {% endif %}
+<div class="mx_auto">
+    {% if category %}
+         <img class="my_image" src="{{category.image.url}}" alt="{{category.name}}" style="width:1200px;height:300px;" >
+</div>
+    <br>
+<div>
+    <h1 class="text-center my_title"><b><h4>{{category.name}}</h4></b></h1>
+    <p class="text-justify"><i>{{category.description}}</i></p>
+</div>
+{% else %}
+<div>
+    <img class="my_image my_image_padding" src="{% static 'img/banner.png' %}" alt="our products" style="width:1300px; height:400px;">
+</div>
+<br>
+       <div>
+          <h1 class="text-center my_title"><b>Our Products Collections</b></h1>
+         <p class="text-justify"><i>We extend on traditional approaches that use mostly transactional data by incorporating both domain knowledge from product suppliers in the form of hierarchies, as well as textual attributes from the products. Our approach starts by combining product hierarchies together with transactional data or domain knowledge to identify candidate sets of product collections. Then, it generates the product collection recommendations from these candidate sets by learning a deep similarity model that leverages textual attributes. Experimental evaluation on real data from the Home Depot online retailer shows that the proposed solution can recommend collections of products with increased accuracy when compared to expert-crafted collections.</i></p>
+       </div>
+{% endif %}
+<div class="container">
+    <div class="row mx_auto">
+        {% for product in products.object_list %}
+        <div class="my_bottom_margin col-9 col-sm-12 col-md-4 col-lg-4 ">
+            <div class="card text-center" style="width:400px;height:400px;" >
+                <a href="{{product.get_url}}" ><img class="card-img-top my_image" src="{{product.image.url}}" style="width:400px;height:300px;" alt="{{product.name}}"></a>
+            <div class="card-body">
+                <h4>{{product.name}}</h4>
+                <p>{{product.price}}</p>
+            </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="mx-auto">
+        {% if products.paginator.num_pages > 1 %}
+        <hr>
+        <div class="text-center">
+            {% for pg in products.paginator.page_range %}
+            <a href="?page={{pg}}" class=" btn btn-light btn-sm {% if products.number == pg %} active {% endif %}">{{pg}}</a>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    <br>
+</div>
+{% endblock %}
